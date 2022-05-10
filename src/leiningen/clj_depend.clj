@@ -1,6 +1,8 @@
-(ns leiningen.clj-depend)
+(ns leiningen.clj-depend
+  (:require [clj-depend.core :as core]))
 
 (defn clj-depend
-  "I don't do a lot."
   [project & args]
-  (println "Hi!"))
+  (let [project-root (:root project)
+        source-paths (:source-paths project)]
+    (core/execute! project-root source-paths)))

@@ -1,33 +1,47 @@
+[![Clojars Project](http://clojars.org/com.fabiodomingues/lein-clj-depend/latest-version.svg)](http://clojars.org/com.fabiodomingues/lein-clj-depend)
+
 # lein-clj-depend
 
-A Leiningen plugin to do many wonderful things.
+A Leiningen plugin to run [clj-depend](https://github.com/clj-depend/clj-depend).
 
 ## Usage
 
-FIXME: Use this for user-level plugins:
+Add `[com.fabiodomingues/lein-clj-depend "0.1.0"]` to `:plugins`.
 
-Put `[lein-clj-depend "0.1.0-SNAPSHOT"]` into the `:plugins` vector of your `:user`
-profile.
+```
+$ lein clj-depend
+```
 
-FIXME: Use this for project-level plugins:
+In case any cyclic dependency is found the analysis will fail with the error message: `Circular dependency between "foo" and "bar"`.
 
-Put `[lein-clj-depend "0.1.0-SNAPSHOT"]` into the `:plugins` vector of your project.clj.
+## Exit codes
 
-FIXME: and add an example usage that actually makes sense:
+- 0: no violations were found
+- 1: one or more violations were found
+- 2: error during analysis
 
-    $ lein clj-depend
+## Configuration
 
-## License
+To let clj-depend know the existing layers in your application and the allowed dependencies between these layers, create a `.clj-depend` directory at the root of the project and inside it a `config.edn` file.
 
-Copyright © 2022 FIXME
+### Layer Checks
 
-This program and the accompanying materials are made available under the
-terms of the Eclipse Public License 2.0 which is available at
-http://www.eclipse.org/legal/epl-2.0.
+Diagram to exemplify the dependency between layers:
 
-This Source Code may also be made available under the following Secondary
-Licenses when the conditions for such availability set forth in the Eclipse
-Public License, v. 2.0 are satisfied: GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or (at your
-option) any later version, with the GNU Classpath Exception which is available
-at https://www.gnu.org/software/classpath/license.html.
+```mermaid
+graph TD
+    A[foo.controller] --> B[foo.logic]
+    A --> C[foo.model]
+    B --> C
+```
+
+Configuration file (`.clj-depend/config.edn`) for diagram above:
+
+```clojure
+{:layers {:controller {:defined-by         ".*\\.controller\\..*"
+                       :accessed-by-layers #{}}
+          :logic      {:defined-by         ".*\\.logic\\..*"
+                       :accessed-by-layers #{:controller}}
+          :model      {:defined-by         ".*\\.model\\..*"
+                       :accessed-by-layers #{:logic :controller}}}}
+```
