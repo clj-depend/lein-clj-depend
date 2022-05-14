@@ -1,8 +1,24 @@
 (ns leiningen.clj-depend
-  (:require [clj-depend.core :as core]))
+  (:refer-clojure :exclude [run!])
+  (:require [clojure.string :as string]
+            [clj-depend.main :as clj-depend.main]
+            [leiningen.core.main :as leiningen.core]))
+
+(defn- project->args
+  [{:keys [root]} args]
+  (concat (or args [])
+          ["--project-root" root]))
+
+(defn- run!
+  [project & args]
+  (let [result (apply clj-depend.main/run! (project->args project args))]
+    (when-let [message (:message result)]
+      (println message))
+    (when (not= 0 (:result-code result))
+      (leiningen.core/exit (:result-code result)))))
 
 (defn clj-depend
   [project & args]
-  (let [project-root (:root project)
-        source-paths (:source-paths project)]
-    (core/execute! project-root source-paths)))
+  (if leiningen.core/*info*
+    (run! project args)
+    (with-out-str (run! project args))))
