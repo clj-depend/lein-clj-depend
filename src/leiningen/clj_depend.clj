@@ -5,9 +5,9 @@
             [leiningen.core.main :as leiningen.core]))
 
 (defn- project->args
-  [{:keys [root source-paths]} args]
+  [{:keys [root]} args]
   (concat (or args [])
-          ["--project-root" root "--source-paths" (string/join "," source-paths)]))
+          ["--project-root" root]))
 
 (defn- run!
   [project & args]
