@@ -1,4 +1,4 @@
-(defproject com.fabiodomingues/lein-clj-depend "0.3.0"
+(defproject com.fabiodomingues/lein-clj-depend "0.3.1-SNAPSHOT"
   :description "Lein plugin to run clj-depend"
   :url "https://github.com/clj-depend/lein-clj-depend"
   :license {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
