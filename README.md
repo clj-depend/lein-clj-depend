@@ -9,7 +9,7 @@ A Leiningen plugin to run [clj-depend](https://github.com/clj-depend/clj-depend)
 Add the plugin to your `project.clj`:
 
 ```clojure
-:plugins [[com.fabiodomingues/lein-clj-depend "0.2.0"]]
+:plugins [[com.fabiodomingues/lein-clj-depend "0.3.0"]]
 ```
 
 ## Usage 
